@@ -19,8 +19,8 @@ backBtn.addEventListener("click",()=>{
   history.back();
 })
 
-const urlParams=new URLSearchParams(window.location.search);
-const countryName=urlParams.get("name");
+const urlParams = new URLSearchParams(window.location.search);
+const countryName = urlParams.get("name") ? decodeURIComponent(urlParams.get("name")): null;
 if(countryName){
   localStorage.setItem("selectedCountryName",countryName);
 }
@@ -69,7 +69,7 @@ const displayContent=(country,data)=>{
     <div class="borders">
        <p><b>Border Countries: </b></p>${country.borders.map(border=>{
          const borderCountry=data.find(c => c.alpha3Code==border);
-         return borderCountry? `<a href="country.html?name=${borderCountry.name}">${border}</a>`:"";
+         return borderCountry? `<a href="country.html?name=${encodeURIComponent(borderCountry.name)}">${border}</a>`:"";
        }).join("")}
     </div>    
     </section>
