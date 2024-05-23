@@ -32,7 +32,7 @@ const fetchData = async () => {
       throw new Error(`HTTP Error! Status: ${res.status}`);
     }
     const data=await res.json();
-    const country=data.find(country => country.name==storedName);
+    const country=data.find(country => country.name===storedName);
     if(country) {
       displayContent(country,data);
     }else {
@@ -68,7 +68,7 @@ const displayContent=(country,data)=>{
     </div>
     <div class="borders">
        <p><b>Border Countries: </b></p>${country.borders.map(border=>{
-         const borderCountry=data.find(c => c.alpha3Code==border);
+         const borderCountry=data.find(c => c.alpha3Code===border);
          return borderCountry ? `<a href="country.html?name=${encodeURIComponent(borderCountry.name)}">${border}</a>` : '';
        }).join("")}
     </div>    
