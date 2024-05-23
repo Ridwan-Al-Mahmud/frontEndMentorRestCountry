@@ -56,7 +56,7 @@ const displayFilterData = (filterData) => {
       <div class="country">
         <img src=${des.flags.svg} alt="" loading="lazy">
         <section class="country-detail">
-          <a href="country.html?name=${encodeURIComponent(des.name).replace("%20"," ")}"><h2 class="country-name">${des.name}</h2></a>
+          <a href="country.html?name=${encodeURIComponent(des.name)}"><h2 class="country-name">${des.name}</h2></a>
           <p><b>Population: </b>${des.population}</p>
           <p class="region-name"><b>Region: </b>${des.region}</p>
           <p><b>Capital: </b>${des.capital}</p>
