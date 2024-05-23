@@ -125,6 +125,14 @@ main{
 .country,.nav,.inputCon,.filterBtn{
   box-shadow:var(--box-shadow)
 }
+@media (max-width:1024px){
+  .country-detail{
+    font-size:1vw;
+  }
+  .country-detail h2{
+    font-size:1.2vw;
+  }
+}
 @media (max-width:768px){
   .country-container{
     display:grid;
