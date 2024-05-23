@@ -124,7 +124,7 @@ main{
   margin-right:2vw;
   border-radius:5px;
 }
-.country:nth-child(4){
+.country:nth-child(4n){
   margin-right:1vw;
 }
 .country img{
