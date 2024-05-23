@@ -37,7 +37,7 @@ const fetchData = async () => {
         <div class="country">
           <img src=${des.flags.svg} alt="" loading="lazy">
           <section class="country-detail">
-            <h4 class="country-name">${des.name}</h4>
+            <h2 class="country-name">${des.name}</h4>
             <p><b>Population: </b>${des.population}</p>
             <p class="region-name"><b>Region: </b>${des.region}</p>
             <p><b>Capital: </b>${des.capital}</p>
