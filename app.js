@@ -66,7 +66,7 @@ const   Array.from(countryName).forEach(country=>{
   })
 })
 
-const regionName = document.querySelectorAll(".region-name");
+/*const regionName = document.querySelectorAll(".region-name");
 
 regions.forEach(region => {
   region.addEventListener("click", (e) => {
@@ -78,4 +78,4 @@ regions.forEach(region => {
       }
     });
   });
-});
+});*/
