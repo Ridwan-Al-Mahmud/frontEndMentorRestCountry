@@ -1,88 +1,120 @@
-const filterBtn=document.querySelector(".filterBtn");
-const themeBtn=document.querySelector(".themeBtn");
-const sunIcon=document.querySelector("#sun");
-const moonIcon=document.querySelector("#moon");
-const countryCon=document.querySelector(".country-container");
-const search=document.querySelector(".userInput");
+const filterBtn = document.querySelector(".filterBtn");
+const themeBtn = document.querySelector(".themeBtn");
+const sunIcon = document.querySelector("#sun");
+const moonIcon = document.querySelector("#moon");
+const countryCon = document.querySelector(".country-container");
+const search = document.querySelector(".userInput");
+const prevBtn = document.querySelector("#prevBtn");
+const nextBtn = document.querySelector("#nextBtn");
+const pageInfo = document.querySelector("#pageInfo");
 
-const theme=()=>{
-  themeBtn.addEventListener("click",()=>{
-  document.body.classList.toggle("dark");
-  if(document.body.classList.contains("dark")){
-    sun.style.display="block";
-    moon.style.display="none";
-  }else{
-    moon.style.display="block";
-    sun.style.display="none";
-  }
-})
-}
+let data;
+let filteredData = []; 
+let currentPage = 1;
+const itemsPerPage = 20;
+
+/*---THEME TOGGLE---*/
+
+const theme = () => {
+  themeBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    if (document.body.classList.contains("dark")) {
+      sunIcon.style.display = "block";
+      moonIcon.style.display = "none";
+    } else {
+      moonIcon.style.display = "block";
+      sunIcon.style.display = "none";
+    }
+  });
+};
 theme();
 
-let data; 
+/*---FETCHING THE DATA AND DISPLAYING IT---*/
 
 const fetchData = async () => {
   try {
-    const res = await fetch('data.json');
+    const res = await fetch("data.json");
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
     data = await res.json();
-    let countriesHTML = '';
-
-    data.forEach(des => {
-      countriesHTML += `
-        <div class="country">
-          <img src=${des.flags.svg} alt="" loading="lazy">
-          <section class="country-detail">
-            <a href="country.html?name=${encodeURIComponent(des.name)}"><h2 class="country-name">${des.name}</h2></a>
-            <p><b>Population: </b>${des.population}</p>
-            <p class="region-name"><b>Region: </b>${des.region}</p>
-            <p><b>Capital: </b>${des.capital}</p>
-          </section>
-        </div>
-      `;
-    });
-
-    countryCon.innerHTML = countriesHTML;
-
+    filteredData = [...data];
+    displayCurrentData();
   } catch (err) {
     console.error('Fetch error:', err);
   }
 };
 
-fetchData();
+const displayFilterData = (filterData) => {
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = currentPage * itemsPerPage;
+  const pageData = filterData.slice(startIndex, endIndex);
 
-filterBtn.addEventListener("change",(e)=>{
-  const selectRegion=e.target.value;
-  filterByRegion(selectRegion);
-})
-
-const filterByRegion=(region)=>{
-  const filterData=data.filter(country => country.region==region);
-  displayFilterData(filterData);
-}
-
-const displayFilterData=(filterData)=>{
   let countriesHTML = '';
-  filterData.forEach(des=>{
+  pageData.forEach(des => {
     countriesHTML += `
-        <div class="country">
-          <img src=${des.flags.svg} alt="" loading="lazy">
-          <section class="country-detail">
-            <a href="country.html?name=${encodeURIComponent(des.name)}"><h2 class="country-name">${des.name}</h2></a>
-            <p><b>Population: </b>${des.population}</p>
-            <p class="region-name"><b>Region: </b>${des.region}</p>
-            <p><b>Capital: </b>${des.capital}</p>
-          </section>
-        </div>
-      `;
+      <div class="country">
+        <img src=${des.flags.svg} alt="" loading="lazy">
+        <section class="country-detail">
+          <a href="country.html?name=${encodeURIComponent(des.name).replace("%20"," ")}"><h2 class="country-name">${des.name}</h2></a>
+          <p><b>Population: </b>${des.population}</p>
+          <p class="region-name"><b>Region: </b>${des.region}</p>
+          <p><b>Capital: </b>${des.capital}</p>
+        </section>
+      </div>
+    `;
   });
   countryCon.innerHTML = countriesHTML;
-}
+  pageInfo.textContent = `Page ${currentPage} of ${Math.ceil(filterData.length / itemsPerPage)}`;
+  updatePaginationButtons(filterData);
+};
 
-search.addEventListener("input",(e)=>{
-  const searchTerm=e.target.value.toLowerCase();
-  const filteredData=data.filter(des => des.name.toLowerCase().includes(searchTerm));
+/*---ADDING PAGINATION---*/
+
+const updatePaginationButtons = (filterData) => {
+  prevBtn.disabled = currentPage === 1;
+  nextBtn.disabled = currentPage === Math.ceil(filterData.length / itemsPerPage);
+};
+
+const filterByRegion = (region) => {
+  filteredData = data.filter(country => country.region == region);
+  currentPage = 1; // Reset current page when filter changes
+  displayCurrentData();
+};
+
+const searchCountries = (searchTerm) => {
+  filteredData = data.filter(des => des.name.toLowerCase().includes(searchTerm));
+  currentPage = 1; 
+  displayCurrentData();
+};
+
+const displayCurrentData = () => {
   displayFilterData(filteredData);
-})
+};
+
+filterBtn.addEventListener("change", (e) => {
+  const selectRegion = e.target.value;
+  filterByRegion(selectRegion);
+});
+
+search.addEventListener("input", (e) => {
+  const searchTerm = e.target.value.toLowerCase();
+  searchCountries(searchTerm);
+});
+
+prevBtn.addEventListener("click", () => {
+  if (currentPage > 1) {
+    currentPage--;
+    displayCurrentData();
+  }
+});
+
+nextBtn.addEventListener("click", () => {
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  if (currentPage < totalPages) {
+    currentPage++;
+    displayCurrentData();
+  }
+});
+
+fetchData();
