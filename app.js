@@ -1,17 +1,12 @@
-const dropdown=document.querySelector(".dropdown");
-const dropOpt=document.querySelector(".dropOpt");
+const filterBtn=document.querySelector(".filterBtn");
 const themeBtn=document.querySelector(".themeBtn");
 const sunIcon=document.querySelector("#sun");
 const moonIcon=document.querySelector("#moon");
 const countryCon=document.querySelector(".country-container");
 const search=document.querySelector(".userInput");
-const regions=document.querySelectorAll(".region");
 
-dropdown.addEventListener("click",()=>{
-  dropOpt.classList.toggle("showOpt");
-})
-
-themeBtn.addEventListener("click",()=>{
+const theme=()=>{
+  themeBtn.addEventListener("click",()=>{
   document.body.classList.toggle("dark");
   if(document.body.classList.contains("dark")){
     sun.style.display="block";
@@ -21,7 +16,10 @@ themeBtn.addEventListener("click",()=>{
     sun.style.display="none";
   }
 })
+}
+theme();
 
+let data; 
 
 const fetchData = async () => {
   try {
@@ -29,7 +27,7 @@ const fetchData = async () => {
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
-    const data = await res.json(); 
+    data = await res.json();
     let countriesHTML = '';
 
     data.forEach(des => {
@@ -37,7 +35,7 @@ const fetchData = async () => {
         <div class="country">
           <img src=${des.flags.svg} alt="" loading="lazy">
           <section class="country-detail">
-            <h2 class="country-name">${des.name}</h4>
+            <a href="country.html?name=${encodeURIComponent(des.name)}"><h2 class="country-name">${des.name}</h2></a>
             <p><b>Population: </b>${des.population}</p>
             <p class="region-name"><b>Region: </b>${des.region}</p>
             <p><b>Capital: </b>${des.capital}</p>
@@ -55,27 +53,36 @@ const fetchData = async () => {
 
 fetchData();
 
-/*const countryName=document.querySelectorAll(".country-name");
-search.addEventListener("input",()=>{
-const   Array.from(countryName).forEach(country=>{
-    if(country.innerText.toLowerCase().includes(search.value.toLowerCase())) {
-      country.parentElement.parentElement.style.display="grid";
-    }else {
-      country.parentElement.parentElement.style.display="none";
-    }
-  })
+filterBtn.addEventListener("change",(e)=>{
+  const selectRegion=e.target.value;
+  filterByRegion(selectRegion);
 })
 
-/*const regionName = document.querySelectorAll(".region-name");
+const filterByRegion=(region)=>{
+  const filterData=data.filter(country => country.region==region);
+  displayFilterData(filterData);
+}
 
-regions.forEach(region => {
-  region.addEventListener("click", (e) => {
-    Array.from(regionName).forEach(elem => {
-      if (elem.innerText.includes(region.innerText) || region.innerText === "All") {
-        elem.parentElement.parentElement.style.display = "grid";
-      } else {
-        elem.parentElement.parentElement.style.display = "none";
-      }
-    });
+const displayFilterData=(filterData)=>{
+  let countriesHTML = '';
+  filterData.forEach(des=>{
+    countriesHTML += `
+        <div class="country">
+          <img src=${des.flags.svg} alt="" loading="lazy">
+          <section class="country-detail">
+            <a href="country.html?name=${encodeURIComponent(des.name)}"><h2 class="country-name">${des.name}</h2></a>
+            <p><b>Population: </b>${des.population}</p>
+            <p class="region-name"><b>Region: </b>${des.region}</p>
+            <p><b>Capital: </b>${des.capital}</p>
+          </section>
+        </div>
+      `;
   });
-});*/
+  countryCon.innerHTML = countriesHTML;
+}
+
+search.addEventListener("input",(e)=>{
+  const searchTerm=e.target.value.toLowerCase();
+  const filteredData=data.filter(des => des.name.toLowerCase().includes(searchTerm));
+  displayFilterData(filteredData);
+})
