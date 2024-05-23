@@ -61,13 +61,20 @@ const displayContent=(country,data)=>{
       <div>
          <p><b>Top Level Domain: </b>${country.topLevelDomain.map(domain=>`<span>${domain} </span>`).join("")}</p>
          <p><b>Languages: </b>${country.languages.map(language=>`<span>${language.nativeName} </span>`).join("")}</p>
-         <p><b>Currencies: </b>${country.currencies.map(currency=>`<span>${currency.name} </span>`).join("")}</p>
+         <p><b>Currencies: </b>${country.currencies ? country.currencies.map(currency => `<span>${currency.name}</span>`).join(' ') : 'N/A'}</p>
          <p><b>Time Zones: </b>${country.timezones.map(timezone=>`<span>${timezone} </span>`).join("")}</p>
          <p><b>Area: </b>${country.area}</p>
       </div>
     </div>
     <div class="borders">
-       
+       <p><b>Border Countries: </b>
+  ${country.borders && country.borders.length > 0 ? 
+    country.borders.map(border => {
+      const borderCountry = data.find(c => c.alpha3Code === border);
+      return borderCountry ? `<a href="country.html?name=${encodeURIComponent(borderCountry.name)}">${borderCountry.name}</a>` : '';
+    }).join(' ') 
+  : 'None'}
+</p>
     </div>   
     </section>
   `
