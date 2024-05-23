@@ -55,7 +55,7 @@ const fetchData = async () => {
 
 fetchData();
 
-const countryName=document.querySelectorAll(".country-name");
+/*const countryName=document.querySelectorAll(".country-name");
 search.addEventListener("input",()=>{
 const   Array.from(countryName).forEach(country=>{
     if(country.innerText.toLowerCase().includes(search.value.toLowerCase())) {
