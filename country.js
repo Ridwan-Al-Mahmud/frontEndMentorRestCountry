@@ -69,7 +69,7 @@ const displayContent=(country,data)=>{
     <div class="borders">
        <p><b>Border Countries: </b></p>${country.borders.map(border=>{
          const borderCountry=data.find(c => c.alpha3Code==border);
-         return borderCountry? `<a href="country.html?name=${encodeURIComponent(borderCountry.name)}">${border}</a>`:"";
+         return borderCountry ? `<a href="country.html?name=${encodeURIComponent(borderCountry.name)}">${border}</a>` : '';
        }).join("")}
     </div>    
     </section>
