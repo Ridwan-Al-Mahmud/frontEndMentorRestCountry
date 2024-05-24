@@ -154,11 +154,44 @@ main{
   }
 }
 @media (max-width:768px){
+  .nav{
+    font-size:7px;
+  }
+  .nav span{
+    font-size:7px;
+  }
+  .userInter{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    justify-content:center;
+  }
+  .inputCon input,.inputCon i{
+    font-size:5px;
+  }
+  .inputCon i{
+    left:2px;
+  }
   .country-container{
     display:grid;
     grid-template-columns:repeat(1,1fr);
   }
   .country{
     margin-inline:10vw;
+  }
+  .country:nth-child(4n){
+    margin-right:10vw;
+  }
+  .filterBtn{
+    width:5px;
+    height:4vh;
+  }
+}
+@media (max-width:320px){
+  .nav h1{
+    font-size:1vw;
+  }
+  .nav i{
+    font-size:2px;
   }
 }
