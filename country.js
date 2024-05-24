@@ -4,16 +4,27 @@ const moonIcon=document.querySelector("#moon");
 const container=document.querySelector(".container");
 const backBtn=document.querySelector(".backBtn");
 
-themeBtn.addEventListener("click",()=>{
-  document.body.classList.toggle("dark");
-  if(document.body.classList.contains("dark")){
-    sun.style.display="block";
-    moon.style.display="none";
-  }else{
-    moon.style.display="block";
-    sun.style.display="none";
+const applyTheme = (theme) => {
+  if (theme === 'dark') {
+    document.body.classList.add("dark");
+    sunIcon.style.display = "block";
+    moonIcon.style.display = "none";
+  } else {
+    document.body.classList.remove("dark");
+    sunIcon.style.display = "none";
+    moonIcon.style.display = "block";
   }
-})
+}
+
+themeBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  const theme = document.body.classList.contains("dark") ? "dark" : "light";
+  localStorage.setItem("theme", theme);
+  applyTheme(theme);
+});
+
+const storedTheme = localStorage.getItem("theme") || "light";
+applyTheme(storedTheme);
 
 backBtn.addEventListener("click",()=>{
   history.back();
