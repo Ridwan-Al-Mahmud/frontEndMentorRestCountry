@@ -47,11 +47,19 @@ const fetchData = async () => {
     }
     data = await res.json();
     const storedRegion = localStorage.getItem("selectedRegion");
+    const storedSearchTerm = localStorage.getItem("searchTerm") || '';
+
     if (storedRegion) {
       filterByRegion(storedRegion);
       filterBtn.value = storedRegion;
     } else {
       filteredData = [...data];
+    }
+
+    if (storedSearchTerm) {
+      search.value = storedSearchTerm;
+      searchCountries(storedSearchTerm);
+    } else {
       displayCurrentData();
     }
   } catch (err) {
@@ -92,12 +100,13 @@ const updatePaginationButtons = (filterData) => {
 
 const filterByRegion = (region) => {
   filteredData = data.filter(country => country.region === region);
-  currentPage = 1; // Reset current page when filter changes
+  currentPage = 1; 
   localStorage.setItem("selectedRegion", region);
   displayCurrentData();
 };
 
 const searchCountries = (searchTerm) => {
+  localStorage.setItem("searchTerm", searchTerm);
   filteredData = data.filter(des => des.name.toLowerCase().includes(searchTerm));
   currentPage = 1; 
   displayCurrentData();
@@ -109,6 +118,8 @@ const displayCurrentData = () => {
 
 filterBtn.addEventListener("change", (e) => {
   const selectRegion = e.target.value;
+  localStorage.removeItem("searchTerm");
+  search.value = '';
   filterByRegion(selectRegion);
 });
 
