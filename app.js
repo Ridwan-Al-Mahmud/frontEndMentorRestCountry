@@ -15,19 +15,27 @@ const itemsPerPage = 20;
 
 /*---THEME TOGGLE---*/
 
-const theme = () => {
-  themeBtn.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-    if (document.body.classList.contains("dark")) {
-      sunIcon.style.display = "block";
-      moonIcon.style.display = "none";
-    } else {
-      moonIcon.style.display = "block";
-      sunIcon.style.display = "none";
-    }
-  });
-};
-theme();
+const applyTheme = (theme) => {
+  if (theme === 'dark') {
+    document.body.classList.add("dark");
+    sunIcon.style.display = "block";
+    moonIcon.style.display = "none";
+  } else {
+    document.body.classList.remove("dark");
+    sunIcon.style.display = "none";
+    moonIcon.style.display = "block";
+  }
+}
+
+themeBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  const theme = document.body.classList.contains("dark") ? "dark" : "light";
+  localStorage.setItem("theme", theme);
+  applyTheme(theme);
+});
+
+const storedTheme = localStorage.getItem("theme") || "light";
+applyTheme(storedTheme);
 
 /*---FETCHING THE DATA AND DISPLAYING IT---*/
 
@@ -38,8 +46,14 @@ const fetchData = async () => {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
     data = await res.json();
-    filteredData = [...data];
-    displayCurrentData();
+    const storedRegion = localStorage.getItem("selectedRegion");
+    if (storedRegion) {
+      filterByRegion(storedRegion);
+      filterBtn.value = storedRegion;
+    } else {
+      filteredData = [...data];
+      displayCurrentData();
+    }
   } catch (err) {
     console.error('Fetch error:', err);
   }
@@ -77,8 +91,9 @@ const updatePaginationButtons = (filterData) => {
 };
 
 const filterByRegion = (region) => {
-  filteredData = data.filter(country => country.region == region);
+  filteredData = data.filter(country => country.region === region);
   currentPage = 1; // Reset current page when filter changes
+  localStorage.setItem("selectedRegion", region);
   displayCurrentData();
 };
 
