@@ -105,3 +105,12 @@ main{
 .nav,.backBtn,.borders a{
   box-shadow:var(--box-shadow);
 }
+@media (max-width:768px){
+  main,.container,.rome{
+    display:flex;
+    flex-direction:column;
+  }
+  .container img{
+    width:100%;
+  }
+}
