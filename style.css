@@ -152,6 +152,10 @@ main{
   .country-detail h2{
     font-size:1.2vw;
   }
+  .country-container{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+  }
 }
 @media (max-width:768px){
   .nav{
